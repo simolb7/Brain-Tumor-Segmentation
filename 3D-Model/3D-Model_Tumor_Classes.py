@@ -27,27 +27,22 @@ colors = {
 # Creazione di un oggetto di figura Mayavi
 mlab.figure(size=(800, 800), bgcolor=(1, 1, 1))
 
-print(mask_volume.shape)
+class_value = 3
 #x = 85
 surfaces = []
 
-# Creazione di mesh 3D per il tumore
-for class_value, color in colors.items():
-    if class_value == 0:
-        continue  # Salta la classe 0 (nero)
-    # Seleziona solo i voxel corrispondenti alla classe corrente
-    #mask = mask_volume[:x,:,:] == class_value
-    mask = mask_volume == class_value
-    
-    # Creazione di una superficie isosurfacing per la classe corrente
-    src = mlab.pipeline.scalar_field(mask.astype(np.float64))
-   # surf = mlab.pipeline.iso_surface(src, color=color, opacity=1)
-    surf = mlab.pipeline.iso_surface(src, color=color, opacity=1, contours=20)
 
-    surfaces.append(surf)
-    
+mask = mask_volume == class_value
 
-mlab.savefig('results/tumorIntero.obj', figure=mlab.gcf())
+# Creazione di una superficie isosurfacing per la classe corrente
+src = mlab.pipeline.scalar_field(mask.astype(np.float64))
+# surf = mlab.pipeline.iso_surface(src, color=color, opacity=1)
+surf = mlab.pipeline.iso_surface(src, color=colors[class_value], opacity=1, contours=20)
+
+surfaces.append(surf)
+
+
+mlab.savefig('results/tumorClass_'+str(class_value)+'.obj', figure=mlab.gcf())
 
 
 mlab.show()

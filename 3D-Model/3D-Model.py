@@ -7,11 +7,11 @@ dir = "C:\\Users\\simon\\Desktop\\Universita\\Tirocinio\\brats2023\\ASNR-MICCAI-
 img = nib.load(dir + 'BraTS-GLI-00000-000-t2f.nii.gz')
 brain_volume = img.get_fdata()
 
-#mask_volume = nib.load(dir + 'BraTS-GLI-00000-000-seg.nii.gz')
-#mask_volume = mask_volume.get_fdata()
+mask_volume = nib.load(dir + 'BraTS-GLI-00000-000-seg.nii.gz')
+mask_volume = mask_volume.get_fdata()
 
 
-mask_volume = np.load('results\prediction.npy')
+#mask_volume = np.load('results\prediction.npy')
 
 
 
@@ -52,7 +52,7 @@ for class_value, color in colors.items():
     surfaces.append(surf)
     
 
-mlab.savefig('prova1.obj', figure=mlab.gcf())
+mlab.savefig('results/prova1.obj', figure=mlab.gcf())
 
 
 mlab.show()
