@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Brain Tumor Segmentation</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="render.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Imposta l'altezza del corpo a tutta l'altezza della finestra */
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .logo {
+            max-width: 65%; /* Massima larghezza del logo */
+            max-height: 65vh; /* Massima altezza del logo */
+            margin-bottom: 40px; /* Margine inferiore per separare dal pulsante */
+        }
+
+        .input {
+            margin-bottom: 10px; /* Spazio inferiore per separare il pulsante */
+            width: 300px; /* Larghezza dell'input per il nome della cartella */
+            padding: 8px; /* Aggiunge spaziatura interna per una migliore visualizzazione */
+            font-size: 16px; /* Imposta la dimensione del testo */
+        }
+
+        .button {
+            padding: 15px 30px; /* Aumenta la spaziatura interna */
+            font-size: 20px; /* Aumenta la dimensione del testo */
+            width: 350px; /* Imposta la larghezza fissa del pulsante */
+            height: 50px; /* Imposta l'altezza fissa del pulsante */
+            background-color: #1A5E63; /* Imposta il colore di sfondo del pulsante */
+            color: white; /* Imposta il colore del testo del pulsante */
+            border: none; /* Rimuove il bordo del pulsante */
+            cursor: pointer; /* Cambia il cursore al passaggio del mouse sul pulsante */
+            transition: background-color 0.3s; /* Transizione animata per il colore di sfondo */
+        }
+
+        .button:hover {
+            background-color: #0D3B3E; /* Cambia il colore di sfondo quando il mouse è sopra il pulsante */
+        }
+
+        .theme-toggle:hover {
+            background-color: #333; /* Colore di sfondo al passaggio del mouse */
+        }
+
+        /* Tema notte */
+        .theme-toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #000; /* Colore di sfondo del pulsante della modalità notte */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: #333; /* Colore di sfondo al passaggio del mouse */
+        }
+
+        /* Tema notte */
+        .night-mode {
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+
+        .night-mode .button {
+            background-color: #333;
+            color: #FFF;
+        }
+
+        .night-mode .button:hover {
+            background-color: #555;
+        }
+
+        .night-mode .theme-toggle {
+            background-color: #FFF;
+            color: #000;
+        }
+
+        .night-mode .theme-toggle:hover {
+            background-color: #DDD;
+        }
+    </style>
+</head>
+<body>
+    <img src="../Group 1-4000.png" alt="Logo" class="logo">
+    <button onclick="uploadDir()" class="button">Upload Folder</button>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('night-mode');
+            const themeToggleButton = document.querySelector('.theme-toggle i');
+            if (document.body.classList.contains('night-mode')) {
+                themeToggleButton.classList.remove('fa-moon');
+                themeToggleButton.classList.add('fa-sun');
+            } else {
+                themeToggleButton.classList.remove('fa-sun');
+                themeToggleButton.classList.add('fa-moon');
+            }
+        }
+    </script>
+</body>
+</html>
