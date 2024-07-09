@@ -1,6 +1,8 @@
 const ipcRenderer = require('electron').ipcRenderer;
+let isUploading = false;
 
-let isUploading = false;  // Variabile di stato per evitare chiamate multiple
+
+  // Variabile di stato per evitare chiamate multiple
 
 function uploadDir() {
     if (isUploading) return;  // Se già in upload, esci dalla funzione

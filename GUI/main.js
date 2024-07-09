@@ -67,7 +67,7 @@ function checkRequiredFiles(folderPath, event) {
             missingFiles: missingFiles
         });
     } else {
-        mainWindow.loadFile('resultPage.html').catch(err => console.error('Failed to load resultPage.html:', err));
+        mainWindow.loadFile('resultPage.html')
     }
 }
 
@@ -106,3 +106,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+

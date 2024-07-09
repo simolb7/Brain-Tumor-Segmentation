@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Page</title>
+    <!-- Utilizzo di Three.js come modulo ES6 -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.138.0/build/three.module.js",
+                "OrbitControls": "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js",
+                "OBJLoader": "https://unpkg.com/three@0.138.0/examples/jsm/loaders/OBJLoader.js",
+                "MTLLoader": "https://unpkg.com/three@0.138.0/examples/jsm/loaders/MTLLoader.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'OrbitControls';
+        import { OBJLoader } from 'OBJLoader';
+        import { MTLLoader } from 'MTLLoader';
+
+        let camera, scene, renderer;
+
+        init();
+
+        function init() {
+            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20 );
+            camera.position.z = 2.5;
+
+            scene = new THREE.Scene();
+
+            const ambientLight = new THREE.AmbientLight( 0xffffff );
+            scene.add( ambientLight );
+
+            const pointLight = new THREE.PointLight( 0xffffff, 15 );
+            camera.add( pointLight );
+            scene.add( camera );
+
+            const onProgress = function ( xhr ) {
+                if ( xhr.lengthComputable ) {
+                    const percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log( `OBJ loading progress: ${percentComplete.toFixed(2)}%` );
+                }
+            };
+
+            const onError = function () {
+                console.error( 'Error loading model' );
+            };
+
+            new MTLLoader()
+                .setPath( '../results/' )
+                .load( 'prova1.mtl', function ( materials ) {
+                    materials.preload();
+                    console.log('MTL loaded successfully:', materials);
+
+                    new OBJLoader()
+                        .setMaterials( materials )
+                        .setPath( '../results/' )
+                        .load( 'prova1.obj', function ( object ) {
+                            console.log('OBJ loaded successfully:', object);
+
+                            object.traverse(function (child) {
+                                if (child.isMesh) {
+                                    if (child.material.opacity === 0) {
+                                        child.material.transparent = false;
+                                        child.material.opacity = 1;
+                                    }
+                                    child.material = new THREE.MeshBasicMaterial({
+                                        color: child.material.color,
+                                        map: child.material.map,
+                                        transparent: child.material.transparent,
+                                        opacity: child.material.opacity
+                                    });
+                                    console.log('Applied material:', child.material);
+                                }
+                            });
+
+                            object.position.y = - 0.95;
+                            object.scale.setScalar( 0.01 );
+                            scene.add( object );
+                        }, onProgress, onError );
+                }, onProgress, onError );
+
+            renderer = new THREE.WebGLRenderer( { antialias: true } );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setAnimationLoop( animate );
+            document.body.appendChild( renderer.domElement );
+
+            const controls = new OrbitControls( camera, renderer.domElement );
+            controls.minDistance = 2;
+            controls.maxDistance = 5;
+
+            window.addEventListener( 'resize', onWindowResize );
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+
+        function animate() {
+            renderer.render( scene, camera );
+        }
+    </script>
+</head>
+<body>
+    <div id="model-viewer" style="width: 100%; height: 100vh;"></div>
+</body>
+</html>
