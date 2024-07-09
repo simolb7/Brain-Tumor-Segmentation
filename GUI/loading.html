@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caricamento in corso...</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Caricamento in corso...</h1>
+    <p>Attendere mentre vengono elaborati i file...</p>
+    <script src="renderer.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+        
+        // Ricevi un segnale quando il processo di elaborazione è completato
+        ipcRenderer.on('process-complete', (event, results) => {
+            // Reindirizza alla pagina dei risultati con i dati ricevuti
+            window.location.href = `result.html?data=${encodeURIComponent(JSON.stringify(results))}`;
+        });
+    </script>
+</body>
+</html>
