@@ -16,6 +16,22 @@
         }
     </script>
 
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Nascondi la barra di scorrimento orizzontale */
+            display: flex;
+            justify-content: flex-start; /* Allinea il contenuto a sinistra */
+            align-items: center;
+            height: 100vh; /* Altezza della finestra */
+            background-color: #f0f0f0; /* Colore di sfondo per evidenziare il viewer */
+        }
+        #model-viewer {
+            width: 60%; /* Utilizza il 60% della larghezza della finestra */
+            height: 100vh; /* Altezza fissa pari all'altezza della finestra */
+        }
+    </style>
+
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'OrbitControls';
@@ -27,32 +43,39 @@
         init();
 
         function init() {
-            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 20 );
-            camera.position.z = 2.5;
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+
+    // Posizione della camera per inquadrare il modello da una distanza frontale
+            camera.position.set(2.5, 2.5, 2.5); // Posiziona la camera in modo che guardi il modello dall'alto a destra
+            camera.lookAt(0, 0, 0); // La camera punta verso l'origine della scena
+
+            // Imposta la proiezione prospettica e aggiusta se necessario
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
 
             scene = new THREE.Scene();
 
-            const onProgress = function ( xhr ) {
-                if ( xhr.lengthComputable ) {
+            const onProgress = function (xhr) {
+                if (xhr.lengthComputable) {
                     const percentComplete = xhr.loaded / xhr.total * 100;
-                    console.log( `OBJ loading progress: ${percentComplete.toFixed(2)}%` );
+                    console.log(`OBJ loading progress: ${percentComplete.toFixed(2)}%`);
                 }
             };
 
             const onError = function () {
-                console.error( 'Error loading model' );
+                console.error('Error loading model');
             };
 
             new MTLLoader()
-                .setPath( '../results/' )
-                .load( 'prova1.mtl', function ( materials ) {
+                .setPath('../results/')
+                .load('prova1.mtl', function (materials) {
                     materials.preload();
                     console.log('MTL loaded successfully:', materials);
 
                     new OBJLoader()
-                        .setMaterials( materials )
-                        .setPath( '../results/' )
-                        .load( 'prova1.obj', function ( object ) {
+                        .setMaterials(materials)
+                        .setPath('../results/')
+                        .load('prova1.obj', function (object) {
                             console.log('OBJ loaded successfully:', object);
 
                             object.traverse(function (child) {
@@ -71,35 +94,43 @@
                                 }
                             });
 
-                            object.position.y = - 0.95;
-                            object.scale.setScalar( 0.01 );
-                            scene.add( object );
-                        }, onProgress, onError );
-                }, onProgress, onError );
+                            // Posizionamento dell'oggetto al centro della scena
+                            var box = new THREE.Box3().setFromObject(object);
+                            box.getCenter(object.position); // Resetta la posizione dell'oggetto
+                            object.position.multiplyScalar(-1);
 
-            renderer = new THREE.WebGLRenderer( { antialias: true } );
-            renderer.setPixelRatio( window.devicePixelRatio );
-            renderer.setSize( 640, 700 ); // Imposta la dimensione del renderer alla metà sinistra
-            renderer.setAnimationLoop( animate );
-            document.getElementById('model-viewer').appendChild( renderer.domElement );
+                            var pivot = new THREE.Group();
+                            scene.add(pivot);
+                            pivot.add(object);
 
-            const controls = new OrbitControls( camera, renderer.domElement );
+                            // Ridimensionamento dell'oggetto
+                            pivot.scale.setScalar(0.01);
+                        }, onProgress, onError);
+                }, onProgress, onError);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth * 0.6, window.innerHeight); // Imposta la dimensione del renderer al 60% della finestra per la larghezza e 100% per l'altezza
+            renderer.setAnimationLoop(animate);
+            document.getElementById('model-viewer').appendChild(renderer.domElement);
+
+            const controls = new OrbitControls(camera, renderer.domElement);
             controls.enablePan = true; // Abilita il panning
-            controls.enableRotate = true; // Disabilita la rotazione
+            controls.enableRotate = true; // Abilita la rotazione
             controls.minDistance = 2;
             controls.maxDistance = 5;
 
-            window.addEventListener( 'resize', onWindowResize );
+            window.addEventListener('resize', onWindowResize);
         }
 
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize( 701, 438 ); // Imposta la dimensione del renderer alla metà sinistra
+            renderer.setSize(window.innerWidth * 0.6, window.innerHeight); // Imposta la dimensione del renderer al 60% della finestra per la larghezza e 100% per l'altezza
         }
 
         function animate() {
-            renderer.render( scene, camera );
+            renderer.render(scene, camera);
         }
     </script>
 </head>
