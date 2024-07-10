@@ -47,7 +47,7 @@
             camera = new THREE.PerspectiveCamera(45, (window.innerWidth * 0.6) / window.innerHeight, 0.1, 20);
 
     // Posizione della camera per inquadrare il modello da una distanza frontale
-            camera.position.set(2.5, -0.5, 0); // Posiziona la camera in modo che guardi il modello dall'alto a destra
+            camera.position.set(2.5, -0.5, 1); // Posiziona la camera in modo che guardi il modello dall'alto a destra
             camera.lookAt(0, 0, 0); // La camera punta verso l'origine della scena
 
             // Imposta la proiezione prospettica e aggiusta se necessario
@@ -95,7 +95,7 @@
                                 }
                             });
 
-                            object.rotation.y =  Math.PI ;
+                            object.rotation.y =  Math.PI;
                             object.rotation.z =  Math.PI ; // Ruota l'oggetto di -90 gradi attorno all'asse X
 
                             
@@ -141,8 +141,8 @@
             const controls = new OrbitControls(camera, renderer.domElement);
             controls.enablePan = true; // Abilita il panning
             controls.enableRotate = true; // Abilita la rotazione
-            controls.minDistance = 2;
-            controls.maxDistance = 5;
+            controls.minDistance = 0;
+            controls.maxDistance = 10;
 
 
             window.addEventListener('resize', onWindowResize);
