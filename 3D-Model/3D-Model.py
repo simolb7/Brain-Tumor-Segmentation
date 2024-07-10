@@ -20,8 +20,8 @@ mask_volume = mask_volume.get_fdata()
 colors = {
     0: (0.0, 0.0, 0.0),    # Classe 0: Nero (sfondo)
     1: (1.0, 0.0, 0.0),    # Classe 1: Rosso (tumore)
-    2: (0.0, 1.0, 0.0),    # Classe 2: Verde (non utilizzato)
-    3: (0.0, 0.0, 1.0)     # Classe 3: Blu (non utilizzato)
+    2: (0.0, 1.0, 0.0),    # Classe 2: Verde (enhancing tumor)
+    3: (0.0, 0.0, 1.0)     # Classe 3: Blu (necrotic and non-enhancing tumor)
 }
 
 brain_volume = np.rot90(brain_volume, k=1, axes=(1, 2))

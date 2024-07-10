@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
     <!-- Utilizzo di Three.js come modulo ES6 -->
     <script type="importmap">
         {
@@ -51,7 +53,130 @@
         .reset-button:hover {
             background-color: #0D3B3E; /* Cambia il colore di sfondo quando il mouse è sopra il pulsante */
         }
+        #info-panel {
+            width: 40%;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column; /* Imposta il layout a colonna per allineare il testo in alto */
+            justify-content: flex-start; /* Allinea il contenuto in alto */
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .night-mode #info-panel {
+            background-color: #212121;
+            color: #FFFFFF;
+        }
+        
+        .night-mode .color-legend {
+            background-color: #333;
+            color: #FFFFFF;
+        }
+    
+        .info-content {
+            padding: 20px;
+            font-weight: bold;
+        }
+    
+        .info-content h1 {
+            font-size: 32px; /* Aumenta la dimensione del font a 32px */
+            margin-top: 20px; /* Spazio superiore aggiunto per separare il testo dalla parte superiore */
+        }
+    
+        .info-divider {
+            width: 80%; /* Larghezza della linea */
+            border: none;
+            border-top: 1px solid #ccc; /* Stile della linea: linea solida grigia */
+            padding-bottom: 15px;
+        }
+    
+        /* Stili per la legenda dei colori */
+        .color-legend {
+            display: flex;
+            flex-direction: column; /* Imposta il layout a colonna per allineare gli elementi uno sotto l'altro */
+            align-items: center; /* Allinea al centro */
+            padding: 10px;
+            width: 70%;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+    
+        .color-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px; /* Spazio tra gli elementi */
+        }
+    
+        .color-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    
+        .color-label {
+            font-size: 14px;
+            width: 160px;
+            display: inline-block;
+        }
 
+        /* Tema notte */
+        .theme-toggle:hover {
+            background-color: #333; /* Colore di sfondo al passaggio del mouse */
+        }
+
+        
+        .theme-toggle {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #000; /* Colore di sfondo del pulsante della modalità notte */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: #333; /* Colore di sfondo al passaggio del mouse */
+        }
+
+        /* Tema notte */
+        .night-mode {
+            background-color: #212121;
+            color: #FFFFFF;
+        }
+
+        .night-mode .button {
+            background-color: #333;
+            color: #FFF;
+        }
+
+        .night-mode .button:hover {
+            background-color: #555;
+        }
+
+        .night-mode .theme-toggle {
+            background-color: #FFF;
+            color: #000;
+        }
+
+        .night-mode .theme-toggle:hover {
+            background-color: #DDD;
+        }
     </style>
 
     <script type="module">
@@ -68,6 +193,8 @@
 
         function init() {
             camera = new THREE.PerspectiveCamera(45, (window.innerWidth * 0.6) / window.innerHeight, 0.1, 20);
+
+            
 
     // Posizione della camera per inquadrare il modello da una distanza frontale
             camera.position.set(2.5, -0.5, 1); // Posiziona la camera in modo che guardi il modello dall'alto a destra
@@ -158,6 +285,8 @@
                 }, onProgress, onError);
 
 
+
+
             axesScene = new THREE.Scene();
             axesCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
             axesCamera.position.set(0, 0, 2);
@@ -171,7 +300,6 @@
             axesRenderer.domElement.style.bottom = '10px';
             axesRenderer.domElement.style.left = '10px';
             document.body.appendChild(axesRenderer.domElement);
-
 
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -210,5 +338,48 @@
 <body>
     <!-- Contenuto della tua pagina -->
     <div id="model-viewer" style="float: left;"></div>
+
+    
+
+    <div id="info-panel">
+        <div class="info-content">
+            <h1 style="font-size: 24px;">Tumor detected</h1>
+        </div>
+        <hr class="info-divider">
+
+        <div class="color-legend">
+            <div class="color-item">
+                <span class="color-circle" style="background-color: #ff0000;"></span>
+                <span class="color-label">Core tumor</span>
+            </div>
+            <div class="color-item">
+                <span class="color-circle" style="background-color: #00ff00;"></span>
+                <span class="color-label">Enhancing tumor</span>
+            </div>
+            <div class="color-item">
+                <span class="color-circle" style="background-color: #0000ff;"></span>
+                <span class="color-label">Necrotic</span>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('night-mode');
+            const themeToggleButton = document.querySelector('.theme-toggle i');
+            if (document.body.classList.contains('night-mode')) {
+                themeToggleButton.classList.remove('fa-moon');
+                themeToggleButton.classList.add('fa-sun');
+            } else {
+                themeToggleButton.classList.remove('fa-sun');
+                themeToggleButton.classList.add('fa-moon');
+            }
+        }
+    </script>
+
 </body>
 </html>
