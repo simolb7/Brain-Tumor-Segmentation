@@ -1,6 +1,7 @@
 from mayavi import mlab
 import numpy as np
 import nibabel as nib
+import trimesh
 
 # Caricamento del volume del cervello e del tumore
 dir = "C:\\Users\\simon\\Desktop\\Universita\\Tirocinio\\brats2023\\ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData\\BraTS-GLI-00000-000\\"
@@ -23,6 +24,8 @@ colors = {
     3: (0.0, 0.0, 1.0)     # Classe 3: Blu (non utilizzato)
 }
 
+brain_volume = np.rot90(brain_volume, k=1, axes=(1, 2))
+mask_volume = np.rot90(mask_volume, k=1, axes=(1, 2))
 
 # Creazione di un oggetto di figura Mayavi
 mlab.figure(size=(800, 800), bgcolor=(1, 1, 1))
@@ -50,9 +53,8 @@ for class_value, color in colors.items():
     surf = mlab.pipeline.iso_surface(src, color=color, opacity=1, contours=20)
 
     surfaces.append(surf)
-    
+
+mlab.view(azimuth=90, elevation=90, roll=0)
 
 mlab.savefig('results/prova1.obj', figure=mlab.gcf())
 
-
-mlab.show()

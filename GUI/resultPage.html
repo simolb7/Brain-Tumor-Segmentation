@@ -19,12 +19,13 @@
     <style>
         body {
             margin: 0;
-            overflow: hidden; /* Nascondi la barra di scorrimento orizzontale */
+            padding: 0;
+            overflow: hidden;
             display: flex;
-            justify-content: flex-start; /* Allinea il contenuto a sinistra */
+            justify-content: flex-start;
             align-items: center;
-            height: 100vh; /* Altezza della finestra */
-            background-color: #f0f0f0; /* Colore di sfondo per evidenziare il viewer */
+            height: 100vh;
+            background-color: #f0f0f0;
         }
         #model-viewer {
             width: 60%; /* Utilizza il 60% della larghezza della finestra */
@@ -38,19 +39,19 @@
         import { OBJLoader } from 'OBJLoader';
         import { MTLLoader } from 'MTLLoader';
 
-        let camera, scene, renderer;
+        let camera, scene, renderer, axesRenderer, axesScene, axesCamera;;
 
         init();
 
         function init() {
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+            camera = new THREE.PerspectiveCamera(45, (window.innerWidth * 0.6) / window.innerHeight, 0.1, 20);
 
     // Posizione della camera per inquadrare il modello da una distanza frontale
-            camera.position.set(2.5, 2.5, 2.5); // Posiziona la camera in modo che guardi il modello dall'alto a destra
+            camera.position.set(2.5, -0.5, 0); // Posiziona la camera in modo che guardi il modello dall'alto a destra
             camera.lookAt(0, 0, 0); // La camera punta verso l'origine della scena
 
             // Imposta la proiezione prospettica e aggiusta se necessario
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = (window.innerWidth * 0.6) / window.innerHeight;
             camera.updateProjectionMatrix();
 
             scene = new THREE.Scene();
@@ -94,10 +95,16 @@
                                 }
                             });
 
+                            object.rotation.y =  Math.PI ;
+                            object.rotation.z =  Math.PI ; // Ruota l'oggetto di -90 gradi attorno all'asse X
+
+                            
                             // Posizionamento dell'oggetto al centro della scena
                             var box = new THREE.Box3().setFromObject(object);
                             box.getCenter(object.position); // Resetta la posizione dell'oggetto
                             object.position.multiplyScalar(-1);
+
+                            
 
                             var pivot = new THREE.Group();
                             scene.add(pivot);
@@ -107,6 +114,23 @@
                             pivot.scale.setScalar(0.01);
                         }, onProgress, onError);
                 }, onProgress, onError);
+
+
+            axesScene = new THREE.Scene();
+            axesCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+            axesCamera.position.set(0, 0, 2);
+            const axesHelper = new THREE.AxesHelper(0.5);
+            axesScene.add(axesHelper);
+        
+            axesRenderer = new THREE.WebGLRenderer({ alpha: true });
+            axesRenderer.setPixelRatio(window.devicePixelRatio);
+            axesRenderer.setSize(200, 200);
+            axesRenderer.domElement.style.position = 'absolute';
+            axesRenderer.domElement.style.bottom = '10px';
+            axesRenderer.domElement.style.left = '10px';
+            document.body.appendChild(axesRenderer.domElement);
+
+
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -120,17 +144,22 @@
             controls.minDistance = 2;
             controls.maxDistance = 5;
 
+
             window.addEventListener('resize', onWindowResize);
         }
 
         function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = (window.innerWidth * 0.6) / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth * 0.6, window.innerHeight); // Imposta la dimensione del renderer al 60% della finestra per la larghezza e 100% per l'altezza
         }
 
         function animate() {
             renderer.render(scene, camera);
+            axesCamera.position.copy(camera.position);
+            axesCamera.quaternion.copy(camera.quaternion);
+        
+            axesRenderer.render(axesScene, axesCamera);
         }
     </script>
 </head>
