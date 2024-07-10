@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <!-- Utilizzo di Three.js come modulo ES6 -->
     <script type="importmap">
         {
@@ -28,9 +29,29 @@
             background-color: #f0f0f0;
         }
         #model-viewer {
-            width: 60%; /* Utilizza il 60% della larghezza della finestra */
-            height: 100%; /* Altezza fissa pari all'altezza della finestra */
+            position: relative;
+            width: 60%;
+            height: 100vh;
+            float: left;
         }
+        #reset-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0D3B3E;
+            color: white;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .reset-button:hover {
+            background-color: #0D3B3E; /* Cambia il colore di sfondo quando il mouse è sopra il pulsante */
+        }
+
     </style>
 
     <script type="module">
@@ -39,7 +60,9 @@
         import { OBJLoader } from 'OBJLoader';
         import { MTLLoader } from 'MTLLoader';
 
-        let camera, scene, renderer, axesRenderer, axesScene, axesCamera;;
+        let camera, scene, renderer, axesRenderer, axesScene, axesCamera;
+        let controls;
+        let initialCameraPosition, initialCameraQuaternion;
 
         init();
 
@@ -49,6 +72,10 @@
     // Posizione della camera per inquadrare il modello da una distanza frontale
             camera.position.set(2.5, -0.5, 1); // Posiziona la camera in modo che guardi il modello dall'alto a destra
             camera.lookAt(0, 0, 0); // La camera punta verso l'origine della scena
+
+            initialCameraPosition = camera.position.clone();
+            initialCameraQuaternion = camera.quaternion.clone();
+
 
             // Imposta la proiezione prospettica e aggiusta se necessario
             camera.aspect = (window.innerWidth * 0.6) / window.innerHeight;
@@ -95,7 +122,8 @@
                                 }
                             });
 
-                            object.rotation.y =  Math.PI;
+                            object.rotation.z =  -Math.PI/10;
+                            object.rotation.y =  Math.PI - Math.PI/6;
                             object.rotation.z =  Math.PI ; // Ruota l'oggetto di -90 gradi attorno all'asse X
 
                             
@@ -112,6 +140,20 @@
 
                             // Ridimensionamento dell'oggetto
                             pivot.scale.setScalar(0.01);
+
+                            const controls = new OrbitControls(camera, renderer.domElement);
+                            controls.enablePan = true; // Abilita il panning
+                            controls.enableRotate = true; // Abilita la rotazione
+                            controls.minDistance = 0;
+                            controls.maxDistance = 10;
+                
+                            const resetButton = document.createElement('button');
+                            resetButton.id = 'reset-button';
+                            resetButton.title = 'Reset View';
+                            resetButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                            resetButton.addEventListener('click', resetCamera);
+                            document.getElementById('model-viewer').appendChild(resetButton);
+
                         }, onProgress, onError);
                 }, onProgress, onError);
 
@@ -138,12 +180,7 @@
             renderer.setAnimationLoop(animate);
             document.getElementById('model-viewer').appendChild(renderer.domElement);
 
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enablePan = true; // Abilita il panning
-            controls.enableRotate = true; // Abilita la rotazione
-            controls.minDistance = 0;
-            controls.maxDistance = 10;
-
+           
 
             window.addEventListener('resize', onWindowResize);
         }
@@ -158,9 +195,16 @@
             renderer.render(scene, camera);
             axesCamera.position.copy(camera.position);
             axesCamera.quaternion.copy(camera.quaternion);
-        
             axesRenderer.render(axesScene, axesCamera);
         }
+
+        function resetCamera() {
+            camera.position.copy(initialCameraPosition);
+            camera.quaternion.copy(initialCameraQuaternion);
+            camera.updateProjectionMatrix();
+            controls.update();
+        }
+
     </script>
 </head>
 <body>
