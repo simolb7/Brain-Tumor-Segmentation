@@ -108,17 +108,35 @@
         <i class="fas fa-moon"></i>
     </button>
     <script>
+        document.body.classList.toggle('night-mode');
+        
         function toggleTheme() {
             document.body.classList.toggle('night-mode');
             const themeToggleButton = document.querySelector('.theme-toggle i');
             if (document.body.classList.contains('night-mode')) {
                 themeToggleButton.classList.remove('fa-moon');
                 themeToggleButton.classList.add('fa-sun');
+                localStorage.setItem('theme', 'night-mode');
             } else {
                 themeToggleButton.classList.remove('fa-sun');
                 themeToggleButton.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light-mode');
             }
         }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'night-mode') {
+                document.body.classList.add('night-mode');
+                const themeToggleButton = document.querySelectorAll('.theme-toggle i');
+                themeToggleButton.forEach(button => {
+                    button.classList.remove('fa-moon');
+                    button.classList.add('fa-sun');
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
     </script>
 </body>
 </html>

@@ -28,7 +28,7 @@
             justify-content: flex-start;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #f2f3f4;
         }
         #model-viewer {
             position: relative;
@@ -66,19 +66,19 @@
             overflow: hidden;
             font-family: 'JetBrains Mono', monospace;
         }
-        .night-mode #info-panel {
-            background-color: #212121;
-            color: #FFFFFF;
-        }
-        
-        .night-mode .color-legend {
+
+        body.night-mode #info-panel {
             background-color: #333;
-            color: #FFFFFF;
+            color: #FFF;
         }
-    
         .info-content {
             padding: 20px;
             font-weight: bold;
+        }
+
+        .info-content .theme-toggle {
+            background-color: #333;
+            color: #FFF;
         }
     
         .info-content h1 {
@@ -105,6 +105,11 @@
             margin-top: 10px;
         }
     
+        .night-mode .color-legend  {
+            background-color: #656565 !important;
+            color: #FFF !important;
+        }
+        
         .color-item {
             display: flex;
             align-items: center;
@@ -125,12 +130,7 @@
             display: inline-block;
         }
 
-        /* Tema notte */
-        .theme-toggle:hover {
-            background-color: #333; /* Colore di sfondo al passaggio del mouse */
-        }
-
-        
+        /*night mode*/
         .theme-toggle {
             position: absolute;
             bottom: 20px;
@@ -141,7 +141,6 @@
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -149,34 +148,15 @@
             align-items: center;
             justify-content: center;
         }
-
-        .theme-toggle:hover {
-            background-color: #333; /* Colore di sfondo al passaggio del mouse */
-        }
-
-        /* Tema notte */
         .night-mode {
             background-color: #212121;
             color: #FFFFFF;
         }
-
-        .night-mode .button {
-            background-color: #333;
-            color: #FFF;
-        }
-
-        .night-mode .button:hover {
-            background-color: #555;
-        }
-
         .night-mode .theme-toggle {
             background-color: #FFF;
             color: #000;
         }
 
-        .night-mode .theme-toggle:hover {
-            background-color: #DDD;
-        }
     </style>
 
     <script type="module">
@@ -336,10 +316,41 @@
     </script>
 </head>
 <body>
-    <!-- Contenuto della tua pagina -->
-    <div id="model-viewer" style="float: left;"></div>
 
-    
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+    <script>
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
+        
+        function toggleTheme() {
+            document.body.classList.toggle('night-mode');
+            const themeToggleButton = document.querySelector('.theme-toggle i');
+            if (document.body.classList.contains('night-mode')) {
+                themeToggleButton.classList.remove('fa-moon');
+                themeToggleButton.classList.add('fa-sun');
+            } else {
+                themeToggleButton.classList.remove('fa-sun');
+                themeToggleButton.classList.add('fa-moon');
+            }
+        }
+
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'night-mode') {
+                document.body.classList.add('night-mode');
+                const themeToggleButton = document.querySelectorAll('.theme-toggle i');
+                themeToggleButton.forEach(button => {
+                    button.classList.remove('fa-moon');
+                    button.classList.add('fa-sun');
+                });
+            }
+        }
+
+        
+    </script>
+
+    <div id="model-viewer" style="float: left;"></div>
 
     <div id="info-panel">
         <div class="info-content">
@@ -363,23 +374,6 @@
         </div>
 
     </div>
-
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <i class="fas fa-moon"></i>
-    </button>
-    <script>
-        function toggleTheme() {
-            document.body.classList.toggle('night-mode');
-            const themeToggleButton = document.querySelector('.theme-toggle i');
-            if (document.body.classList.contains('night-mode')) {
-                themeToggleButton.classList.remove('fa-moon');
-                themeToggleButton.classList.add('fa-sun');
-            } else {
-                themeToggleButton.classList.remove('fa-sun');
-                themeToggleButton.classList.add('fa-moon');
-            }
-        }
-    </script>
 
 </body>
 </html>
