@@ -15,7 +15,7 @@ const createWindow = () => {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            webSecurity: false
+            webSecurity: false,
         }
     });
 
@@ -46,6 +46,7 @@ const createWindow = () => {
         console.log("Window closed."); // Debug
         mainWindow = null;
     });
+
 }
 
 function checkRequiredFiles(folderPath, event) {
@@ -71,26 +72,120 @@ function checkRequiredFiles(folderPath, event) {
     }
 }
 
-function startPythonProcess(folderPath, event) {
-    const pythonProcess = spawn('python', ['PROVA.py', folderPath]);
-
-    pythonProcess.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
+function createResultTumorWindow() {
+    let resultWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        parent: mainWindow,
+        modal: false, // Imposta a true se vuoi che sia modale
+        resizable: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            webSecurity: false,
+            contentSecurityPolicy: "script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline';"
+        }
     });
 
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
+    resultWindow.loadFile('tumorView.html');
 
-    pythonProcess.on('close', (code) => {
-        console.log(`Child process exited with code ${code}`);
-        event.sender.send('process-complete');
+    resultWindow.on('closed', () => {
+        resultWindow = null;
     });
 }
+
+function createResultCoreWindow() {
+    let resultWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        parent: mainWindow,
+        resizable: false,
+        modal: false, // Imposta a true se vuoi che sia modale
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            webSecurity: false,
+            contentSecurityPolicy: "script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline';"
+        }
+    });
+
+    resultWindow.loadFile('coreView.html');
+
+    resultWindow.on('closed', () => {
+        resultWindow = null;
+    });
+}
+
+function createResultEnhancingWindow() {
+    let resultWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        parent: mainWindow,
+        resizable: false,
+        modal: false, // Imposta a true se vuoi che sia modale
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            webSecurity: false,
+            contentSecurityPolicy: "script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline';"
+        }
+    });
+
+    resultWindow.loadFile('enhancingView.html');
+
+    resultWindow.on('closed', () => {
+        resultWindow = null;
+    });
+}
+
+function createResultNecroticWindow() {
+    let resultWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        parent: mainWindow,
+        resizable: false,
+        modal: false, // Imposta a true se vuoi che sia modale
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            webSecurity: false,
+            contentSecurityPolicy: "script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline';"
+        }
+    });
+
+    resultWindow.loadFile('necroticView.html');
+
+    resultWindow.on('closed', () => {
+        resultWindow = null;
+    });
+}
+
+
 
 app.whenReady().then(() => {
     console.log("App is ready."); // Debug
     createWindow();
+
+    ipcMain.on('model-viewer-tumor', () => {
+        createResultTumorWindow();
+    });
+
+    ipcMain.on('model-viewer-core', () => {
+        createResultCoreWindow();
+    });
+
+    ipcMain.on('model-viewer-enhancing', () => {
+        createResultEnhancingWindow();
+    });
+
+    ipcMain.on('model-viewer-necrotic', () => {
+        createResultNecroticWindow();
+    });
+
 });
 
 app.on('window-all-closed', () => {

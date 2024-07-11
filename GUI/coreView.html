@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://unpkg.com;">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f3f4;
+        }
+        #model-viewer {
+            width: 100%;
+            height: 100%;
+        }
+        #reset-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #0D3B3E;
+            color: white;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.138.0/build/three.module.js",
+                "OrbitControls": "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js",
+                "OBJLoader": "https://unpkg.com/three@0.138.0/examples/jsm/loaders/OBJLoader.js",
+                "MTLLoader": "https://unpkg.com/three@0.138.0/examples/jsm/loaders/MTLLoader.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'OrbitControls';
+        import { OBJLoader } from 'OBJLoader';
+        import { MTLLoader } from 'MTLLoader';
+
+        console.log('Moduli Three.js e loader importati correttamente.');
+
+        window.onload = function() {
+            const { ipcRenderer } = require('electron');
+
+            
+            let camera, scene, renderer, axesRenderer, axesScene, axesCamera;
+            let controls;
+            let initialCameraPosition, initialCameraQuaternion;
+
+            init();
+
+            function init() {
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+
+                
+
+        // Posizione della camera per inquadrare il modello da una distanza frontale
+                camera.position.set(2.5, -0.5, 1); // Posiziona la camera in modo che guardi il modello dall'alto a destra
+                camera.lookAt(0, 0, 0); // La camera punta verso l'origine della scena
+
+                initialCameraPosition = camera.position.clone();
+                initialCameraQuaternion = camera.quaternion.clone();
+
+
+                // Imposta la proiezione prospettica e aggiusta se necessario
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                scene = new THREE.Scene();
+
+                const onProgress = function (xhr) {
+                    if (xhr.lengthComputable) {
+                        const percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log(`OBJ loading progress: ${percentComplete.toFixed(2)}%`);
+                    }
+                };
+
+                const onError = function () {
+                    console.error('Error loading model');
+                };
+
+                new MTLLoader()
+                    .setPath('../results/')
+                    .load('tumorClass_1.mtl', function (materials) {
+                        materials.preload();
+                        console.log('MTL loaded successfully:', materials);
+
+                        new OBJLoader()
+                            .setMaterials(materials)
+                            .setPath('../results/')
+                            .load('tumorClass_1.obj', function (object) {
+                                console.log('OBJ loaded successfully:', object);
+
+                                object.traverse(function (child) {
+                                    if (child.isMesh) {
+                                        if (child.material.opacity === 0) {
+                                            child.material.transparent = false;
+                                            child.material.opacity = 1;
+                                        }
+                                        child.material = new THREE.MeshBasicMaterial({
+                                            color: child.material.color,
+                                            map: child.material.map,
+                                            transparent: child.material.transparent,
+                                            opacity: child.material.opacity
+                                        });
+                                        console.log('Applied material:', child.material);
+                                    }
+                                });
+
+                                object.rotation.z =  -Math.PI/10;
+                                object.rotation.y =  Math.PI - Math.PI/6;
+                                object.rotation.z =  Math.PI ; // Ruota l'oggetto di -90 gradi attorno all'asse X
+
+                                
+                                // Posizionamento dell'oggetto al centro della scena
+                                var box = new THREE.Box3().setFromObject(object);
+                                box.getCenter(object.position); // Resetta la posizione dell'oggetto
+                                object.position.multiplyScalar(-1);
+
+                                
+
+                                var pivot = new THREE.Group();
+                                scene.add(pivot);
+                                pivot.add(object);
+
+                                // Ridimensionamento dell'oggetto
+                                pivot.scale.setScalar(0.01);
+
+                                const controls = new OrbitControls(camera, renderer.domElement);
+                                controls.enablePan = true; // Abilita il panning
+                                controls.enableRotate = true; // Abilita la rotazione
+                                controls.minDistance = 0;
+                                controls.maxDistance = 10;
+                    
+                                const resetButton = document.createElement('button');
+                                resetButton.id = 'reset-button';
+                                resetButton.title = 'Reset View';
+                                resetButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                                resetButton.addEventListener('click', resetCamera);
+                                document.getElementById('model-viewer').appendChild(resetButton);
+
+                            }, onProgress, onError);
+                    }, onProgress, onError);
+
+
+                console.log('Scena e oggetti creati.');
+
+                axesScene = new THREE.Scene();
+                axesCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+                axesCamera.position.set(0, 0, 2);
+                const axesHelper = new THREE.AxesHelper(0.5);
+                axesScene.add(axesHelper);
+            
+                axesRenderer = new THREE.WebGLRenderer({ alpha: true });
+                axesRenderer.setPixelRatio(window.devicePixelRatio);
+                axesRenderer.setSize(200, 200);
+                axesRenderer.domElement.style.position = 'absolute';
+                axesRenderer.domElement.style.bottom = '10px';
+                axesRenderer.domElement.style.left = '10px';
+                document.body.appendChild(axesRenderer.domElement);
+
+
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight); // Imposta la dimensione del renderer al 60% della finestra per la larghezza e 100% per l'altezza
+                renderer.setAnimationLoop(animate);
+                document.getElementById('model-viewer').appendChild(renderer.domElement);
+
+            
+
+                window.addEventListener('resize', onWindowResize);
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight); // Imposta la dimensione del renderer al 60% della finestra per la larghezza e 100% per l'altezza
+            }
+
+            function animate() {
+                renderer.render(scene, camera);
+                axesCamera.position.copy(camera.position);
+                axesCamera.quaternion.copy(camera.quaternion);
+                axesRenderer.render(axesScene, axesCamera);
+            }
+
+            function resetCamera() {
+                camera.position.copy(initialCameraPosition);
+                camera.quaternion.copy(initialCameraQuaternion);
+                camera.updateProjectionMatrix();
+                controls.update();
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="model-viewer"></div>
+</body>
+</html>

@@ -462,8 +462,8 @@
                 });
             }
         }
-        
 
+        
         
     </script>
 
@@ -495,13 +495,36 @@
         </div>
         
         <div class="view-buttons">
-            <button class="view-button-wide">Entire tumor</button>
+            <button class="view-button-wide" id ="entireTumorBtn">Entire tumor</button>
             <div class="button-group">
-                <button class="view-button">Core tumor</button>
-                <button class="view-button">Enhancing tumor</button>
-                <button class="view-button">Necrotic</button>
+                <button class="view-button" id = "coreBtn">Core tumor</button>
+                <button class="view-button" id = "enhancingBtn">Enhancing tumor</button>
+                <button class="view-button" id = "necroticBtn">Necrotic</button>
             </div>
         </div>
+
+        <script>
+
+            const { ipcRenderer } = require('electron');
+
+            document.getElementById('entireTumorBtn').addEventListener('click', () => {
+                ipcRenderer.send('model-viewer-tumor');
+            });
+
+            document.getElementById('coreBtn').addEventListener('click', () => {
+                ipcRenderer.send('model-viewer-core');
+            });
+
+            document.getElementById('enhancingBtn').addEventListener('click', () => {
+                ipcRenderer.send('model-viewer-enhancing');
+            });
+
+            document.getElementById('necroticBtn').addEventListener('click', () => {
+                ipcRenderer.send('model-viewer-necrotic');
+            });
+
+        </script>
+    
         
         <div class="info-content-1">
             <span class="centered-heading">Operations</span>
@@ -509,13 +532,13 @@
         
         <div class="operations">
             <div class="axis-input-group">
-                <select class="operation-select">
+                <select class="operation-select" onChange="CheckValue(this)">
                     <option value="x">x</option>
                     <option value="y">y</option>
                     <option value="z">z</option>
                     <!-- Add options for different axes here -->
                 </select>
-                <input type="text" pattern="[0-9]" class="operation-input" placeholder="Value">
+                <input type="number" id="numinfo" pattern="[0-9]" class="operation-input" placeholder="Value" min="1">
             </div>
             <button class="operation-button">CUT <i class="fas fa-cut"></i></button>
         </div>
