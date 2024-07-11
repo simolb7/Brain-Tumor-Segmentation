@@ -103,12 +103,14 @@
 </head>
 <body>
     <img src="../resources/Group 1-4000.png" alt="Logo" class="logo">
+    
     <button onclick="uploadDir()" class="button">Upload Folder</button>
     <button class="theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-moon"></i>
     </button>
     <script>
-        document.body.classList.toggle('night-mode');
+        localStorage.setItem('theme', 'light-mode');
+
         
         function toggleTheme() {
             document.body.classList.toggle('night-mode');

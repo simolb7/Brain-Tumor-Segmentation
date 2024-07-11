@@ -156,7 +156,114 @@
             background-color: #FFF;
             color: #000;
         }
+        .divider-container {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin: 10px 0;
+        }
 
+        .info-content-1 {
+            padding: 20px;
+            width: 80%;
+            margin-top: 15px;
+        }
+        
+        .centered-heading {
+            font-size: 16px;
+            grid-template-columns: 1fr max-content 1fr;
+            grid-column-gap: 0.8rem;
+            align-items: center;
+            display: grid;
+        }
+
+        .centered-heading::before,
+        .centered-heading::after {
+            content: "";
+            display: block;
+            height: 1px;
+            border-top: 1px solid #ccc;
+        }
+        
+        .view-buttons, .operations {
+            display: grid;
+            grid-template-columns: 1fr; /* Una colonna per default */
+            gap: 5px; /* Spazio tra le righe e le colonne */
+            width: 80%; /* Larghezza desiderata per il div .view-buttons (adatta alle tue esigenze) */
+            
+        }
+        
+        .view-button-wide {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #0D3B3E;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            height: 45px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Tre colonne per i bottoni */
+            gap: 5px; /* Spazio tra i bottoni */
+        }
+        
+        .view-button {
+            width: 100%; /* Occupa tutta la larghezza della cella */
+            padding: 10px;
+            background-color: #0D3B3E;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            height: 50px; /* Altezza desiderata */
+        }
+        
+        .view-button:hover, .operation-button:hover, .view-button-wide:hover {
+            background-color: #094D51;
+        }
+        
+        .operations {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Spazio tra le righe */
+            text-align: center; /* Allinea il contenuto al centro */
+            padding: 20px; /* Aggiungi un po' di padding per separare dal bordo */
+            width: 300px; /* Larghezza desiderata per il div .operations (adatta alle tue esigenze) */
+            margin: 0 auto; /* Centra il div .operations orizzontalmente */
+            /*background-color: #f0f0f0; /* Colore di sfondo per evidenziare il div .operations */
+        }
+        
+        .axis-input-group {
+            display: flex;
+            gap: 10px; /* Spazio tra gli elementi */
+            align-items: center; /* Centra verticalmente */
+            justify-content: center; /* Allinea al centro orizzontalmente */
+        }
+        
+        .operation-select, .operation-input {
+            flex: 1; /* Occupa tutto lo spazio disponibile */
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-family: 'JetBrains Mono', monospace;
+            height: 40px;
+            box-sizing: border-box; /* Include il padding nell'altezza/larghezza */
+        }
+        
+        .operation-button {
+            width: 100%; /* Occupa tutta la larghezza disponibile */
+            padding: 10px;
+            background-color: #0D3B3E;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            height: 40px; /* Altezza desiderata */
+            box-sizing: border-box; /* Include il padding nell'altezza/larghezza */
+        }
     </style>
 
     <script type="module">
@@ -203,14 +310,14 @@
 
             new MTLLoader()
                 .setPath('../results/')
-                .load('prova1.mtl', function (materials) {
+                .load('brain.mtl', function (materials) {
                     materials.preload();
                     console.log('MTL loaded successfully:', materials);
 
                     new OBJLoader()
                         .setMaterials(materials)
                         .setPath('../results/')
-                        .load('prova1.obj', function (object) {
+                        .load('brain.obj', function (object) {
                             console.log('OBJ loaded successfully:', object);
 
                             object.traverse(function (child) {
@@ -337,6 +444,7 @@
 
         function applySavedTheme() {
             const savedTheme = localStorage.getItem('theme');
+            
             if (savedTheme === 'night-mode') {
                 document.body.classList.add('night-mode');
                 const themeToggleButton = document.querySelectorAll('.theme-toggle i');
@@ -346,6 +454,7 @@
                 });
             }
         }
+        
 
         
     </script>
@@ -372,8 +481,36 @@
                 <span class="color-label">Necrotic</span>
             </div>
         </div>
-
-    </div>
+        
+        <div class="info-content-1">
+                <span class="centered-heading">Change View</span>
+        </div>
+        
+        <div class="view-buttons">
+            <button class="view-button-wide">Entire tumor</button>
+            <div class="button-group">
+                <button class="view-button">Core tumor</button>
+                <button class="view-button">Enhancing tumor</button>
+                <button class="view-button">Necrotic</button>
+            </div>
+        </div>
+        
+        <div class="info-content-1">
+            <span class="centered-heading">Operations</span>
+        </div>
+        
+        <div class="operations">
+            <div class="axis-input-group">
+                <select class="operation-select">
+                    <option value="x">x</option>
+                    <option value="y">y</option>
+                    <option value="z">z</option>
+                    <!-- Add options for different axes here -->
+                </select>
+                <input type="text" pattern="[0-9]" class="operation-input" placeholder="Value">
+            </div>
+            <button class="operation-button">CUT <i class="fas fa-cut"></i></button>
+        </div>
 
 </body>
 </html>
