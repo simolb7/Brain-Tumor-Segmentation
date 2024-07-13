@@ -213,29 +213,33 @@ app.whenReady().then(() => {
 
     ipcMain.on('model-viewer-cutted', (event, data) => {
         createResultCuttedWindow();
-
+    
         const { axis, value } = data;
-
+    
         console.log(`Axis: ${axis}, Value: ${value}`);
-
+    
+        // Verifica il percorso assoluto del file Python
+        const scriptPath = path.join(__dirname, '../3D-Model/cutModel.py');
+        console.log(`Script Path: ${scriptPath}`);
+    
         // Esegui il processo Python qui
-        const pythonProcess = spawn('python', ['../3D-Model/cutModel.py', axis, value]);
-
+        const pythonProcess = spawn('python', [scriptPath, axis, value]);
+    
         pythonProcess.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
         });
-
+    
         pythonProcess.stderr.on('data', (data) => {
             console.error(`stderr: ${data}`);
         });
-
+    
         pythonProcess.on('close', (code) => {
             console.log(`Process exited with code ${code}`);
             // Invia un messaggio al renderer per aggiornare l'interfaccia utente
-            
             cuttedWindow.webContents.send('python-process-cutted', code);
         });
     });
+    
 
 });
 

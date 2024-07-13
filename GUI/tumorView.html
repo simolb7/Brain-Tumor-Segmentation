@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://unpkg.com;">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Viewer</title>
     <style>
@@ -35,6 +36,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .color-legend {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            width: 160px; /* Larghezza della legenda */
+            height: 70px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .color-item {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centra gli elementi orizzontalmente */
+            margin-bottom: 5px; /* Spazio tra gli elementi */
+            width: 100%; /* Imposta larghezza al 100% per allineare gli elementi figli */
+        }
+        
+        .color-circle {
+            display: flex; /* Usa flex invece di inline-block */
+            justify-content: center; /* Centra orizzontalmente */
+            align-items: center; /* Centra verticalmente */
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .color-label {
+            font-size: 14px;
+            flex: 1; /* Occupa lo spazio rimanente */
         }
     </style>
     <script type="importmap">
@@ -211,6 +250,20 @@
     </script>
 </head>
 <body>
+    <div class="color-legend">
+        <div class="color-item">
+            <span class="color-circle" style="background-color: #ff0000;"></span>
+            <span class="color-label">Core tumor</span>
+        </div>
+        <div class="color-item">
+            <span class="color-circle" style="background-color: #00ff00;"></span>
+            <span class="color-label">Enhancing tumor</span>
+        </div>
+        <div class="color-item">
+            <span class="color-circle" style="background-color: #0000ff;"></span>
+            <span class="color-label">Necrotic</span>
+        </div>
+    </div>
     <div id="model-viewer"></div>
 </body>
 </html>
