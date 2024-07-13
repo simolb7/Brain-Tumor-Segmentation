@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    
     <title>Loading page</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,6 +22,11 @@
         background-color: #f2f3f4;
         
     }
+    body.night-mode {
+      background-color: #333; /* Dark background color */
+      color: #ecf0f1; /* Light text color */
+  }
+
     *,
       *:after,
       *:before {
@@ -128,7 +135,7 @@
       }
       .cube > div:nth-of-type(6),
       .shadow > div:nth-of-type(6) {
-        background: hsl(var(--hue), 60%, 65%);
+        background: #333;
         height: calc(var(--depth) * 1vmin);
         width: calc(var(--width) * 1vmin);
         transform: translate(-50%, -50%) translate3d(0, 0, calc((var(--height) / 2) * -1vmin)) rotateX(180deg);
@@ -229,25 +236,44 @@
 
       h1 {
         font-size: 40px;
-        font-weight: bold;
         text-align: center;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'Montserrat', sans-serif;
         margin-bottom: 20px;
         margin-top: 20px;
+        font-weight: 700;
+
       }
 
       p {
         font-size: 15px;
         text-align: center;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'Montserrat', sans-serif;
         margin-top: 20px;
         margin-bottom: 50px;
-        color: #9c9c9c;
+        color: #7f8c8d;
 
       }
     
 </style>
+
 <body>
+  <script>
+    
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('theme');
+    
+      document.body.classList.remove('night-mode', 'light-mode');
+  
+      if (savedTheme === 'night-mode') {
+          document.body.classList.add('night-mode');
+      } else {
+          document.body.classList.add('light-mode');
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      applySavedTheme();
+    });
+  </script>
     <div>
         <h1>Loading</h1>
 
@@ -333,7 +359,6 @@
        
 
     </div>
-    
     
     <script>
         const { ipcRenderer } = require('electron');

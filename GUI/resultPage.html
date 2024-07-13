@@ -6,6 +6,7 @@
     <title>Result Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
     <!-- Utilizzo di Three.js come modulo ES6 -->
     <script type="importmap">
@@ -64,7 +65,7 @@
             align-items: center;
             text-align: center;
             overflow: hidden;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
         }
 
         body.night-mode #info-panel {
@@ -204,7 +205,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
             height: 45px;
             border-radius: 10px;
         }
@@ -222,7 +223,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
             height: 50px; /* Altezza desiderata */
             border-radius: 10px;
         }
@@ -254,7 +255,7 @@
             flex: 1; /* Occupa tutto lo spazio disponibile */
             padding: 10px;
             border: 1px solid #ccc;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
             height: 40px;
             box-sizing: border-box; /* Include il padding nell'altezza/larghezza */
             border-radius: 10px;
@@ -267,7 +268,7 @@
             color: white;
             border: none;
             cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Montserrat', sans-serif;
             height: 40px; /* Altezza desiderata */
             box-sizing: border-box; /* Include il padding nell'altezza/larghezza */
             border-radius: 10px;
@@ -442,9 +443,11 @@
             document.body.classList.toggle('night-mode');
             const themeToggleButton = document.querySelector('.theme-toggle i');
             if (document.body.classList.contains('night-mode')) {
+                localStorage.setItem('theme', 'night-mode');
                 themeToggleButton.classList.remove('fa-moon');
                 themeToggleButton.classList.add('fa-sun');
             } else {
+                localStorage.setItem('theme', 'light-mode');
                 themeToggleButton.classList.remove('fa-sun');
                 themeToggleButton.classList.add('fa-moon');
             }
@@ -540,7 +543,7 @@
                 </select>
                 <input type="number" id="numInput" pattern="[0-9]" class="operation-input" placeholder="Value" min="1">
             </div>
-            <button class="operation-button" id="cutBtn">CUT <i class="fas fa-cut"></i></button>
+            <button class="operation-button" id="cutBtn">CUT&nbsp;&nbsp;<i class="fas fa-cut"></i></button>
         </div>
 
         <script>
