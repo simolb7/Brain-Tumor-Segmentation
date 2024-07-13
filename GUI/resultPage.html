@@ -273,6 +273,11 @@
             box-sizing: border-box; /* Include il padding nell'altezza/larghezza */
             border-radius: 10px;
         }
+
+        .operation-input.error {
+            border: 2px solid red;
+            
+        }
     </style>
 
     <script type="module">
@@ -535,23 +540,64 @@
         
         <div class="operations">
             <div class="axis-input-group">
-                <select class="operation-select" id="axisSelect" onChange="CheckValue(this)">
+                <select class="operation-select" id="axisSelect" onChange="updateLimits()">
                     <option value="x">x</option>
                     <option value="y">y</option>
                     <option value="z">z</option>
                     <!-- Add options for different axes here -->
                 </select>
-                <input type="number" id="numInput" pattern="[0-9]" class="operation-input" placeholder="Value" min="1">
+                <input type="number" id="numInput" pattern="[0-9]" class="operation-input" placeholder="Value" min="1" max="255">
+                <div id="error" class="error-message"></div>
             </div>
-            <button class="operation-button" id="cutBtn">CUT&nbsp;&nbsp;<i class="fas fa-cut"></i></button>
+            <button class="operation-button" id="cutBtn" >CUT&nbsp;&nbsp;<i class="fas fa-cut"></i></button>
         </div>
 
         <script>
-            document.getElementById('cutBtn').addEventListener('click', () => {
-                const axis = document.getElementById('axisSelect').value;
-                const value = document.getElementById('numInput').value;
-                ipcRenderer.send('model-viewer-cutted', {axis, value});
+            function updateLimits() {
+                const axisSelect = document.getElementById('axisSelect');
+                const numInput = document.getElementById('numInput');
+    
+                switch (axisSelect.value) {
+                    case 'x':
+                    case 'y':
+                        numInput.max = 255;
+                        break;
+                    case 'z':
+                        numInput.max = 155;
+                        break;
+                    default:
+                        numInput.max = 255;
+                }
+            }
+    
+            function validateAndCut() {
+                const numInput = document.getElementById('numInput');
+                const max = parseInt(numInput.max, 10);
+                const min = parseInt(numInput.min, 10);
+                const value = parseInt(numInput.value, 10);
+    
+                if (isNaN(value) || value < min || value > max) {
+                    numInput.classList.add('error');
+                    return false;
+                } else {
+                    numInput.classList.remove('error');
+                    return true;
+                }
+            }
+    
+            document.getElementById('cutBtn').addEventListener('click', (event) => {
+                if (validateAndCut()) {
+                    const axis = document.getElementById('axisSelect').value;
+                    const value = document.getElementById('numInput').value;
+                    ipcRenderer.send('model-viewer-cutted', {axis, value});
+                } else {
+                    // Blocca l'operazione
+                    event.preventDefault();
+                }
             });
+    
+            // Inizializza i limiti all'avvio
+            updateLimits();
         </script>
 
 </body>
