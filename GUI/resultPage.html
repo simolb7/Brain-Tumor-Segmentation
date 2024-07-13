@@ -532,16 +532,24 @@
         
         <div class="operations">
             <div class="axis-input-group">
-                <select class="operation-select" onChange="CheckValue(this)">
+                <select class="operation-select" id="axisSelect" onChange="CheckValue(this)">
                     <option value="x">x</option>
                     <option value="y">y</option>
                     <option value="z">z</option>
                     <!-- Add options for different axes here -->
                 </select>
-                <input type="number" id="numinfo" pattern="[0-9]" class="operation-input" placeholder="Value" min="1">
+                <input type="number" id="numInput" pattern="[0-9]" class="operation-input" placeholder="Value" min="1">
             </div>
-            <button class="operation-button">CUT <i class="fas fa-cut"></i></button>
+            <button class="operation-button" id="cutBtn">CUT <i class="fas fa-cut"></i></button>
         </div>
+
+        <script>
+            document.getElementById('cutBtn').addEventListener('click', () => {
+                const axis = document.getElementById('axisSelect').value;
+                const value = document.getElementById('numInput').value;
+                ipcRenderer.send('model-viewer-cutted', {axis, value});
+            });
+        </script>
 
 </body>
 </html>

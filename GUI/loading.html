@@ -3,20 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caricamento in corso...</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>Loading page</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<style>
+    body {
+        margin: 0;
+        padding: 20;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f2f3f4;
+        
+    }
+    .loader {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        background-color: rgba(0, 0, 0, 0.5);
+        transform: rotate(45deg);
+        overflow: hidden;
+        margin: 30px auto;
+      }
+      .loader:after{
+        content: '';
+        position: absolute;
+        inset: 8px;
+        margin: auto;
+        background: #222b32;
+      }
+      .loader:before{
+        content: '';
+        position: absolute;
+        inset: -15px;
+        margin: auto;
+        background: #0D3B3E;
+        animation: diamondLoader 3s linear infinite;
+      }
+      @keyframes diamondLoader {
+        0%  ,10% {
+          transform: translate(-64px , -64px) rotate(-45deg)
+        }
+        90% , 100% {
+          transform: translate(0px , 0px) rotate(-45deg)
+        }
+      }
+
+      h1 {
+        font-size: 40px;
+        font-weight: bold;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
+
+      p {
+        font-size: 15px;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        margin-top: 20px;
+        margin-bottom: 50px;
+
+      }
+    
+</style>
 <body>
-    <h1>Caricamento in corso...</h1>
-    <p>Attendere mentre vengono elaborati i file...</p>
-    <script src="renderer.js"></script>
+    <div>
+        <h1>Loading</h1>
+
+        <p>Please wait until the model is created</p>
+   
+        <div class="loader"></div>
+    
+       
+
+    </div>
+    
+    
     <script>
         const { ipcRenderer } = require('electron');
-        
-        // Ricevi un segnale quando il processo di elaborazione è completato
-        ipcRenderer.on('process-complete', (event, results) => {
-            // Reindirizza alla pagina dei risultati con i dati ricevuti
-            window.location.href = `result.html?data=${encodeURIComponent(JSON.stringify(results))}`;
+
+        ipcRenderer.on('python-process-cutted', (event, code) => {
+            // Carica la nuova pagina quando il processo Python è terminato
+            
+            window.location = 'cuttedView.html';
         });
     </script>
 </body>

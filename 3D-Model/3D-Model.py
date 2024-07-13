@@ -47,7 +47,7 @@ for class_value, color in colors.items():
         continue  # Salta la classe 0 (nero)
     # Seleziona solo i voxel corrispondenti alla classe corrente
     #mask = mask_volume[:150,:,:] == class_value
-    mask = mask_volume[:150,:,:] == class_value
+    mask = mask_volume == class_value
     
     # Creazione di una superficie isosurfacing per la classe corrente
     src = mlab.pipeline.scalar_field(mask.astype(np.float64))
