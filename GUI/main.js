@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
+
 let mainWindow;
 let cuttedWindow;
 
@@ -217,7 +218,6 @@ app.whenReady().then(() => {
         const { axis, value } = data;
     
         console.log(`Axis: ${axis}, Value: ${value}`);
-    
         // Verifica il percorso assoluto del file Python
         const scriptPath = path.join(__dirname, '../3D-Model/cutModel.py');
         console.log(`Script Path: ${scriptPath}`);

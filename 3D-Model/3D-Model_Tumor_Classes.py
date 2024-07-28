@@ -2,6 +2,8 @@ from mayavi import mlab
 import numpy as np
 import nibabel as nib
 
+
+
 # Caricamento del volume del cervello e del tumore
 dir = "C:\\Users\\simon\\Desktop\\Universita\\Tirocinio\\brats2023\\ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData\\BraTS-GLI-00000-000\\"
 img = nib.load(dir + 'BraTS-GLI-00000-000-t2f.nii.gz')

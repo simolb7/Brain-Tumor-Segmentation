@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "electron-store": "^10.0.0",
     "three": "^0.166.1",
     "three-mtl-loader": "^1.0.2",
     "three-obj-loader": "^1.1.3",

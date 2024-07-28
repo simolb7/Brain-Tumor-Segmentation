@@ -12,10 +12,18 @@ def createBrain(t2, mask_volume):
     
     print(mask_volume.shape)
 
+    #mask_volume = np.load("C:/Users/simon/Desktop/Universita/Tirocinio/pred1.npy")
+    #mask_volume=np.argmax(mask_volume, axis=4)[0,:,:,:]
+    #print(mask_volume.shape)
+
     padding = np.zeros((mask_volume.shape[0], mask_volume.shape[1], 11))
     mask_volume = np.concatenate((mask_volume, padding), axis=2)
     print("Dimensioni di brain_volume:", brain_volume.shape)
     print("Dimensioni di mask_volume_padded:", mask_volume.shape)
+
+
+    #mask_volume = np.load('results\prediction.npy')
+
 
 
     # Creazione di una mappa di colori per il tumore
@@ -37,6 +45,7 @@ def createBrain(t2, mask_volume):
     brain_masked[mask_volume != 0] = 0
 
     # Aggiunta del cervello come sfondo trasparente
+    #src_brain = mlab.pipeline.scalar_field(brain_masked[:150,:,:].astype(np.float64))
     src_brain = mlab.pipeline.scalar_field(brain_masked.astype(np.float64))
     brain_surface = mlab.pipeline.iso_surface(src_brain, color=(0.6, 0.79, 0.8), opacity=0.5)
 
@@ -57,6 +66,8 @@ def createBrain(t2, mask_volume):
 
         surfaces.append(surf)
 
+    mlab.view(azimuth=90, elevation=90, roll=0)
 
-    mlab.savefig('results/brain.obj', figure=mlab.gcf())
+    #mlab.savefig('results/brain.obj', figure=mlab.gcf())
 
+    mlab.show()
