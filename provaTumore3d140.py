@@ -68,6 +68,6 @@ def createBrain(t2, mask_volume):
 
     mlab.view(azimuth=90, elevation=90, roll=0)
 
-    #mlab.savefig('results/brain.obj', figure=mlab.gcf())
+    mlab.savefig('results/brain.obj', figure=mlab.gcf())
 
     mlab.show()

@@ -1,18 +1,17 @@
 import numpy as np
 import nibabel as nib
-from tensorflow.keras.utils import to_categorical
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import Model
-from keras.layers import Input, Conv3D, MaxPooling3D, concatenate, Conv3DTranspose, BatchNormalization, Dropout, Lambda
-from keras.optimizers import Adam
-from keras.metrics import MeanIoU
 import segmentation_models_3D as sm
 import keras
 import tensorflow as tf
 from model.loadModel import loadWeight
-from provaTumore3d140 import createBrain
+from model_3d.brain_tumor import createBrain
+import sys
+import io
 
+# Imposta la codifica della console su UTF-8
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 scaler = MinMaxScaler()
 
 def load_data(t2, flair, t1ce):
@@ -34,18 +33,48 @@ def load_data(t2, flair, t1ce):
     
     return temp_combined_images
 
+def main(t2, flair, t1ce):
 
+    model = loadWeight()
 
+    img = load_data(t2, flair, t1ce)
+    img_input = np.expand_dims(img, axis=0)
+    print(img_input.shape)
+    prediction = model.predict(img_input)
+    print(prediction.shape)
+    prediction_argmax=np.argmax(prediction, axis=4)[0,:,:,:]
+
+    #CHIAMA IL FILE PER LA CREAZIONE DEL MODELLO 3D
+    np.save('../results/prediction.npy', prediction_argmax)
+    
+    print('creating brain model...')
+    createBrain(t2, prediction_argmax)
+    print('brain model created')
+
+if __name__ == "__main__":
+    print("Script invoked directly")  # Debugging print
+    sys.stdout.flush()
+
+    if len(sys.argv) != 4:
+        print("Usage: script.py <t2> <flair> <t1ce>")
+        sys.stdout.flush()
+        sys.exit(1)
+
+    t2 = sys.argv[1]
+    flair = sys.argv[2]
+    t1ce = sys.argv[3]
+    
+    t2 = t2.replace('\\', '/')
+    flair = flair.replace('\\', '/')
+    t1ce = t1ce.replace('\\', '/')
+
+    sys.stdout.flush()
+
+    main(t2, flair, t1ce)
+
+'''
 t2 = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t2w.nii.gz"
 flair = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t2f.nii.gz"
-t1ce ="C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t1c.nii.gz"
-
-model = loadWeight()
-img = load_data(t2, flair, t1ce)
-img_input = np.expand_dims(img, axis=0)
-prediction = model.predict(img_input)
-prediction_argmax=np.argmax(prediction, axis=4)[0,:,:,:]
-
-
-#CHIAMA IL FILE PER LA CREAZIONE DEL MODELLO 3D
-createBrain(t2, prediction_argmax)
+t1ce = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t1c.nii.gz"
+main(t2, flair, t1ce)
+'''

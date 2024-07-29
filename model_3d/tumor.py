@@ -1,10 +1,15 @@
 from mayavi import mlab
 import numpy as np
 import nibabel as nib
+import sys
 
 mlab.options.offscreen = True
 
-def main(mask_volume):
+def createTumor():
+    
+    print('qui')
+    mask_volume = np.load("../results/prediction.npy")
+    print(mask_volume.shape)
 
     # Creazione di una mappa di colori per il tumore
     colors = {
@@ -35,5 +40,10 @@ def main(mask_volume):
         surfaces.append(surf)
         
 
-    mlab.savefig('results/tumorIntero.obj', figure=mlab.gcf())
+    mlab.savefig('../results/tumorIntero.obj', figure=mlab.gcf())
 
+if __name__ == "__main__":
+    print("Script invoked directly")  # Debugging print
+    sys.stdout.flush()
+
+    createTumor()

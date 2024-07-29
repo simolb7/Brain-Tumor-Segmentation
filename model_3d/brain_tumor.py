@@ -1,14 +1,14 @@
 from mayavi import mlab
 import numpy as np
 import nibabel as nib
-import trimesh
 
 mlab.options.offscreen = True
 
 def createBrain(t2, mask_volume):
-# Caricamento del volume del cervello e del tumore
+    print(t2)
     img = nib.load(t2)
     brain_volume = img.get_fdata()
+    print(brain_volume.shape)
     
     print(mask_volume.shape)
 
@@ -17,11 +17,10 @@ def createBrain(t2, mask_volume):
     print("Dimensioni di brain_volume:", brain_volume.shape)
     print("Dimensioni di mask_volume_padded:", mask_volume.shape)
 
-
     # Creazione di una mappa di colori per il tumore
     colors = {
         0: (0.0, 0.0, 0.0),    # Classe 0: Nero (sfondo)
-        1: (1.0, 0.0, 0.0),    # Classe 1: Rosso (tumore)
+        1: (1.0, 0.0, 0.0),    # Classe 1: Rosso (core tumor)
         2: (0.0, 1.0, 0.0),    # Classe 2: Verde (enhancing tumor)
         3: (0.0, 0.0, 1.0)     # Classe 3: Blu (necrotic and non-enhancing tumor)
     }
@@ -37,6 +36,7 @@ def createBrain(t2, mask_volume):
     brain_masked[mask_volume != 0] = 0
 
     # Aggiunta del cervello come sfondo trasparente
+    #src_brain = mlab.pipeline.scalar_field(brain_masked[:150,:,:].astype(np.float64))
     src_brain = mlab.pipeline.scalar_field(brain_masked.astype(np.float64))
     brain_surface = mlab.pipeline.iso_surface(src_brain, color=(0.6, 0.79, 0.8), opacity=0.5)
 
@@ -57,6 +57,18 @@ def createBrain(t2, mask_volume):
 
         surfaces.append(surf)
 
+    mlab.view(azimuth=90, elevation=90, roll=0)
+    
+    print('aggiornando il file...')
 
-    mlab.savefig('results/brain.obj', figure=mlab.gcf())
-
+    mlab.savefig('../results/brain.obj', figure=mlab.gcf())
+    
+    print('file aggiornato.')
+    
+    mlab.show()
+    
+    
+'''
+msk = np.load('results/prediciton.npy')    
+createBrain('C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000\BraTS-GLI-00000-000-t2f.nii.gz', msk)
+'''
