@@ -123,6 +123,19 @@
 
                 scene = new THREE.Scene();
 
+                
+                const ambientLight = new THREE.AmbientLight(0x404040, 1.5); // Luce ambiente, colore e intensità
+                scene.add(ambientLight);
+            
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Luce direzionale, colore e intensità
+                directionalLight.position.set(5, 5, 5); // Posizione della luce
+                scene.add(directionalLight);
+            
+                const pointLight = new THREE.PointLight(0xffffff, 0.8); // Luce puntiforme, colore e intensità
+                pointLight.position.set(2, 2, 2); // Posizione della luce
+                scene.add(pointLight);
+            
+
                 const onProgress = function (xhr) {
                     if (xhr.lengthComputable) {
                         const percentComplete = xhr.loaded / xhr.total * 100;
@@ -152,7 +165,7 @@
                                             child.material.transparent = false;
                                             child.material.opacity = 1;
                                         }
-                                        child.material = new THREE.MeshBasicMaterial({
+                                        child.material = new THREE.MeshStandardMaterial({
                                             color: child.material.color,
                                             map: child.material.map,
                                             transparent: child.material.transparent,
@@ -162,9 +175,7 @@
                                     }
                                 });
 
-                                object.rotation.z =  -Math.PI/10;
-                                object.rotation.y =  Math.PI - Math.PI/6;
-                                object.rotation.z =  Math.PI ; // Ruota l'oggetto di -90 gradi attorno all'asse X
+                                object.rotation.x =  -Math.PI/2;
 
                                 
                                 // Posizionamento dell'oggetto al centro della scena
