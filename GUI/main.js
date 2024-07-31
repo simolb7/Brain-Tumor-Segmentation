@@ -91,6 +91,23 @@ function checkRequiredFiles(folderPath, event) {
             // Inizia il processo Python
             const pythonProcess = spawn('python', ['../main.py', t2Path, flairPath, t1cePath]);
 
+            pythonProcess.stdout.on('data', (data) => {
+                console.log(`stdout: ${data}`);
+                // Puoi inviare aggiornamenti alla pagina di caricamento se necessario
+            });
+
+            pythonProcess.stderr.on('data', (data) => {
+                console.error(`stderr: ${data}`);
+                // Puoi gestire gli errori inviando messaggi alla pagina di caricamento
+            });
+
+            pythonProcess.on('close', (code) => {
+                console.log(`Process finished with code ${code}`);
+                // Una volta terminato il processo Python, carica la pagina dei risultati
+                mainWindow.loadFile('resultPage.html');
+            });
+
+            console.log("Python process started.");
             pythonProcess.on('close', (code) => {
                 console.log(`Process finished with code ${code}`);
                 // Una volta terminato il processo Python, carica la pagina dei risultati

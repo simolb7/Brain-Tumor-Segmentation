@@ -5,18 +5,15 @@ import nibabel as nib
 mlab.options.offscreen = True
 
 def createBrain(t2, mask_volume):
-    print(t2)
     img = nib.load(t2)
+    
     brain_volume = img.get_fdata()
-    print(brain_volume.shape)
     
     print(mask_volume.shape)
-
-    padding = np.zeros((mask_volume.shape[0], mask_volume.shape[1], 11))
+    print(brain_volume.shape)
+    padding = np.zeros((mask_volume.shape[0], mask_volume.shape[1], 11), dtype=np.uint8)
     mask_volume = np.concatenate((mask_volume, padding), axis=2)
-    print("Dimensioni di brain_volume:", brain_volume.shape)
-    print("Dimensioni di mask_volume_padded:", mask_volume.shape)
-
+    print(np.unique(mask_volume))
     # Creazione di una mappa di colori per il tumore
     colors = {
         0: (0.0, 0.0, 0.0),    # Classe 0: Nero (sfondo)
@@ -53,7 +50,7 @@ def createBrain(t2, mask_volume):
         # Creazione di una superficie isosurfacing per la classe corrente
         src = mlab.pipeline.scalar_field(mask.astype(np.float64))
     # surf = mlab.pipeline.iso_surface(src, color=color, opacity=1)
-        surf = mlab.pipeline.iso_surface(src, color=color, opacity=1, contours=20)
+        surf = mlab.pipeline.iso_surface(src, color=color, opacity=1)
 
         surfaces.append(surf)
 
@@ -68,7 +65,3 @@ def createBrain(t2, mask_volume):
     mlab.show()
     
     
-'''
-msk = np.load('results/prediciton.npy')    
-createBrain('C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000\BraTS-GLI-00000-000-t2f.nii.gz', msk)
-'''

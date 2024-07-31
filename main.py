@@ -40,14 +40,16 @@ def main(t2, flair, t1ce):
     img = load_data(t2, flair, t1ce)
     img_input = np.expand_dims(img, axis=0)
     print(img_input.shape)
+
     prediction = model.predict(img_input)
     print(prediction.shape)
     prediction_argmax=np.argmax(prediction, axis=4)[0,:,:,:]
 
     #CHIAMA IL FILE PER LA CREAZIONE DEL MODELLO 3D
     np.save('../results/prediction.npy', prediction_argmax)
-    
+
     print('creating brain model...')
+    
     createBrain(t2, prediction_argmax)
     print('brain model created')
 
