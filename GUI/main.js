@@ -356,7 +356,10 @@ app.whenReady().then(() => {
         pythonProcess.on('close', (code) => {
             console.log(`Process exited with code ${code}`);
             // Invia un messaggio al renderer per aggiornare l'interfaccia utente
-            cuttedWindow.loadFile('cuttedView.html');
+            cuttedWindow.loadFile('cuttedView.html').then(() => {
+                // Dopo che la pagina è stata caricata, invia i dati
+                cuttedWindow.webContents.send('update-view', { axis, value });
+            });
         });
     });    
 

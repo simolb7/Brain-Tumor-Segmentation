@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://unpkg.com;">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Viewer</title>
     <style>
@@ -21,6 +22,7 @@
         #model-viewer {
             width: 100%;
             height: 100%;
+            font-family: 'Montserrat', sans-serif;
         }
         #reset-button {
             position: absolute;
@@ -54,15 +56,16 @@
         
         .color-item {
             display: flex;
-            align-items: center;
+            flex-direction: row; /* Orienta i figli in colonna */
+            align-items: center; /* Centra gli elementi orizzontalmente */
             justify-content: center; /* Centra gli elementi orizzontalmente */
             margin-bottom: 5px; /* Spazio tra gli elementi */
-            width: 100%; /* Imposta larghezza al 100% per allineare gli elementi figli */
+            width: 100%; /* Imposta larghezza al 100% */
         }
         
         .color-label {
             font-size: 14px;
-            flex: 1; /* Occupa lo spazio rimanente */
+            margin: 0 10px; /* Aggiungi uno spazio tra le etichette se necessario */
         }
 
     </style>
@@ -241,11 +244,23 @@
 </head>
 <body>
 
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        ipcRenderer.on('update-view', (event, data) => {
+            const { axis, value } = data;
+            console.log(`Received Axis: ${axis}, Value: ${value}`);
+            // Utilizza i valori come desideri, per esempio, aggiornando il DOM
+            document.getElementById('axis-display').innerHTML = `Axis: <b>${axis}</b>`;
+            document.getElementById('value-display').innerHTML = `Value: <b>${value}</b>`;
+        });
+    </script>
+
     
     <div class="color-legend">
         <div class="color-item">
-            <span class="color-label" id="axisLabel">Axis: </span>
-            <span class="color-label" id="valueLabel">Value: </span>
+            <span class="color-label" id="axis-display">Axis: </span>
+            <span class="color-label" id="value-display">Value: </span>
         </div>
     </div>
 
