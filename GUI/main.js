@@ -7,6 +7,7 @@ const { spawn } = require('child_process');
 let mainWindow;
 let cuttedWindow;
 let resultWindow;
+let t2Path;
 
 //create the main window 1200x800
 const createWindow = () => {
@@ -84,7 +85,7 @@ function checkRequiredFiles(folderPath, event) {
         const t1wPath = path.join(folderPath, t1w);
         const t1cePath = path.join(folderPath, t1ce);
         const flairPath = path.join(folderPath, flair);
-        const t2Path = path.join(folderPath, t2);
+        t2Path = path.join(folderPath, t2);
 
         console.log(`t2: ${t2Path}`);
         console.log(`flair: ${flairPath}`);
@@ -340,7 +341,7 @@ app.whenReady().then(() => {
         console.log(`Script Path: ${scriptPath}`);
     
         // Esegui il processo Python 
-        const pythonProcess = spawn('python', [scriptPath, axis, value]);
+        const pythonProcess = spawn('python', [scriptPath, t2Path, axis, value]);
     
         pythonProcess.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);

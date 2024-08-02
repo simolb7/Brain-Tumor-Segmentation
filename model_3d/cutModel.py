@@ -1,4 +1,9 @@
 import sys
+import io
+
+# Imposta la codifica della console su UTF-8
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 print("Script started")  # Debugging print
 sys.stdout.flush()
 
@@ -17,35 +22,27 @@ except Exception as e:
 
 mlab.options.offscreen = True
 
-def main(axis, value):
+def main(t2, axis, value):
     '''
     Create the 3d model of the tumor, create an obj file and mtl file for the material
     '''
     print("Starting main function")  # Debugging print
     sys.stdout.flush()
 
-    dir = "C:\\Users\\simon\\Desktop\\Universita\\Tirocinio\\brats2023\\ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData\\BraTS-GLI-00000-000\\"
-    brain_file = dir + 'BraTS-GLI-00000-000-t2f.nii.gz'
-    mask_file = dir + 'BraTS-GLI-00000-000-seg.nii.gz'
     
-    if not os.path.exists(brain_file):
-        print(f"Brain file not found: {brain_file}")
-        sys.stdout.flush()
-        sys.exit(1)
-        
-    if not os.path.exists(mask_file):
-        print(f"Mask file not found: {mask_file}")
-        sys.stdout.flush()
-        sys.exit(1)
+   # brain_file = dir + 'BraTS-GLI-00000-000-t2f.nii.gz'
+    mask_volume = np.load('../results/prediction.npy')
+    padding = np.zeros((mask_volume.shape[0], mask_volume.shape[1], 11), dtype=np.uint8)
+    mask_volume = np.concatenate((mask_volume, padding), axis=2)
+    
     
     print("Files found, loading data...")
     sys.stdout.flush()
     
-    img = nib.load(brain_file)
-    brain_volume = img.get_fdata()
-
-    mask_volume = nib.load(mask_file)
-    mask_volume = mask_volume.get_fdata()
+    print(t2)
+    brain = nib.load(t2)
+    brain_volume = brain.get_fdata()
+    print(brain_volume.shape)
 
     print("Data loaded, processing...")
     sys.stdout.flush()
@@ -109,15 +106,16 @@ if __name__ == "__main__":
     print("Script invoked directly")  # Debugging print
     sys.stdout.flush()
 
-    if len(sys.argv) != 3:
-        print("Usage: script.py <axis> <value>")
+    if len(sys.argv) != 4:
+        print("Usage: script.py <t2> <axis> <value>")
         sys.stdout.flush()
         sys.exit(1)
 
-    axis = sys.argv[1]
-    value = sys.argv[2]
+    t2 = sys.argv[1]
+    axis = sys.argv[2]
+    value = sys.argv[3]
 
     print(f"Arguments received: axis={axis}, value={value}")
     sys.stdout.flush()
 
-    main(axis, value)
+    main(t2, axis, value)
