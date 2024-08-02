@@ -279,7 +279,10 @@
             
         }
     </style>
-
+    <!-- script per la creazione del 3d viewer (codice preso dalla pagina di three js) e modificato in base alle esigenze
+        settando camera, luci e orientamento del modello nella scena, impostati gli assi in basso sx, e creata una funzione che permette
+        il reset della visuale della camera.
+        Impostato il centro di rotazione della scena sul cervello -->
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'OrbitControls';

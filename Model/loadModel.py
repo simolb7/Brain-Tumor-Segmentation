@@ -77,8 +77,11 @@ def simple_unet_model(IMG_HEIGHT, IMG_WIDTH, IMG_DEPTH, IMG_CHANNELS, num_classe
 
 
 def loadWeight():
-
-
+    
+    '''
+    define all the aspects of the model, creating an istance and then load the weights
+    '''
+    
     model = simple_unet_model(240, 240, 144, 3, 4)
 
     wt0, wt1, wt2, wt3 = 0.25,0.25,0.25,0.25
@@ -115,7 +118,7 @@ def loadWeight():
 
     # Carica il modello salvato
     model = tf.keras.models.load_model(
-        "C:/Users/simon/Desktop/Universita/Tirocinio/saved_model25_epochs.keras",
+        "C:/Users/simon/Desktop/Universita/Tirocinio/weights/saved_model60_epochs.keras",
         custom_objects=custom_objects
     )
     

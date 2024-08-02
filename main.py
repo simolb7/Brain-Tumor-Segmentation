@@ -35,6 +35,11 @@ def load_data(t2, flair, t1ce):
 
 def main(t2, flair, t1ce):
 
+    '''
+    Load the model weight and make the prediction -> npy array 240x240x144, then save it in prediction.npy.
+    After lunch the script to create the 3d model of the brain with inside the tumor
+    '''
+    
     model = loadWeight()
 
     img = load_data(t2, flair, t1ce)
@@ -74,9 +79,3 @@ if __name__ == "__main__":
 
     main(t2, flair, t1ce)
 
-'''
-t2 = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t2w.nii.gz"
-flair = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t2f.nii.gz"
-t1ce = "C:/Users/simon/Desktop/Universita/Tirocinio/brats2023/ASNR-MICCAI-BraTS2023-GLI-Challenge-TrainingData/BraTS-GLI-00000-000/BraTS-GLI-00000-000-t1c.nii.gz"
-main(t2, flair, t1ce)
-'''

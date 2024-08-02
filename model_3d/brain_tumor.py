@@ -5,6 +5,11 @@ import nibabel as nib
 mlab.options.offscreen = True
 
 def createBrain(t2, mask_volume):
+    
+    '''
+    Create the 3d model of the brain within the tumor,create an obj file and mtl file for the material
+    '''
+    
     img = nib.load(t2)
     
     brain_volume = img.get_fdata()
@@ -56,11 +61,7 @@ def createBrain(t2, mask_volume):
 
     mlab.view(azimuth=90, elevation=90, roll=0)
     
-    print('aggiornando il file...')
-
     mlab.savefig('../results/brain.obj', figure=mlab.gcf())
-    
-    print('file aggiornato.')
     
     mlab.show()
     

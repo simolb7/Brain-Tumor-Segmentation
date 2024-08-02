@@ -6,6 +6,10 @@ import sys
 mlab.options.offscreen = True
 
 def createClass(class_value):
+    
+    '''
+    Create the 3d model for each class of the tumor, create an obj file for the model and mtl file for the material
+    '''
 
     mask_volume = np.load('../results/prediction.npy')
 

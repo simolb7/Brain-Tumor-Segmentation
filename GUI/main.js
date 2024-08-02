@@ -8,7 +8,7 @@ let mainWindow;
 let cuttedWindow;
 let resultWindow;
 
-
+//create the main window 1200x800
 const createWindow = () => {
     console.log("Creating window..."); // Debug
     mainWindow = new BrowserWindow({
@@ -23,10 +23,12 @@ const createWindow = () => {
         }
     });
 
+    //indicizza la pagina a index.html
     mainWindow.loadFile('index.html').then(() => {
         console.log("Window created and index.html loaded."); // Debug
     }).catch(err => console.error('Failed to load index.html:', err));
 
+    //apre una finestra di dialogo di sistema per prendere la directory
     ipcMain.on('open-folder-dialog', async (event) => {
         console.log("Opening folder dialog..."); // Debug
         try {
@@ -54,6 +56,7 @@ const createWindow = () => {
 }
 
 function checkRequiredFiles(folderPath, event) {
+    //controlla se ci sono tutti i file richiesti nella directory
     const requiredSuffixes = ['-t1n.nii.gz', '-t1c.nii.gz', '-t2f.nii.gz', '-t2w.nii.gz'];
     const filesInFolder = fs.readdirSync(folderPath);
 
@@ -93,18 +96,10 @@ function checkRequiredFiles(folderPath, event) {
 
             pythonProcess.stdout.on('data', (data) => {
                 console.log(`stdout: ${data}`);
-                // Puoi inviare aggiornamenti alla pagina di caricamento se necessario
             });
 
             pythonProcess.stderr.on('data', (data) => {
                 console.error(`stderr: ${data}`);
-                // Puoi gestire gli errori inviando messaggi alla pagina di caricamento
-            });
-
-            pythonProcess.on('close', (code) => {
-                console.log(`Process finished with code ${code}`);
-                // Una volta terminato il processo Python, carica la pagina dei risultati
-                mainWindow.loadFile('resultPage.html');
             });
 
             console.log("Python process started.");
@@ -117,6 +112,7 @@ function checkRequiredFiles(folderPath, event) {
     }
 }
 
+//creo una finestra apposita per ogni schermata possibile in base alla funzione
 function createResultTumorWindow() {
     resultWindow = new BrowserWindow({
         width: 800,
@@ -240,11 +236,12 @@ app.whenReady().then(() => {
     createWindow();
 
     ipcMain.on('model-viewer-tumor', () => {
+        //lancia la funzione per creare la finestra ed intanto lancia il processo python per la creazione del modello 3d
         createResultTumorWindow();
 
         console.log(`Script Path: `);
     
-        // Esegui il processo Python qui
+        // Esegui il processo Python 
         const pythonProcess = spawn('python', ['../model_3d/tumor.py']);
 
         pythonProcess.stdout.on('data', (data) => {
@@ -266,7 +263,7 @@ app.whenReady().then(() => {
         createResultCoreWindow();
         console.log(`Script Path: `);
     
-        // Esegui il processo Python qui
+        // Esegui il processo Python 
         const classTumor = 1;
         const pythonProcess = spawn('python', ['../model_3d/tumor_classes.py', classTumor]);
 
@@ -290,7 +287,7 @@ app.whenReady().then(() => {
 
         console.log(`Script Path: `);
     
-        // Esegui il processo Python qui
+        // Esegui il processo Python 
         const classTumor = 2;
         const pythonProcess = spawn('python', ['../model_3d/tumor_classes.py', classTumor]);
 
@@ -313,7 +310,7 @@ app.whenReady().then(() => {
         createResultNecroticWindow();
         console.log(`Script Path: `);
     
-        // Esegui il processo Python qui
+        // Esegui il processo Python 
         const classTumor = 3;
         const pythonProcess = spawn('python', ['../model_3d/tumor_classes.py', classTumor]);
 
@@ -342,7 +339,7 @@ app.whenReady().then(() => {
         const scriptPath = path.join(__dirname, '../model_3d/cutModel.py');
         console.log(`Script Path: ${scriptPath}`);
     
-        // Esegui il processo Python qui
+        // Esegui il processo Python 
         const pythonProcess = spawn('python', [scriptPath, axis, value]);
     
         pythonProcess.stdout.on('data', (data) => {

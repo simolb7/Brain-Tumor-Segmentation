@@ -7,7 +7,11 @@ mlab.options.offscreen = True
 
 def createTumor():
     
-    print('qui')
+    '''
+    Create the 3d model of the tumor, create an obj file and mtl file for the material
+    '''
+    
+
     mask_volume = np.load("../results/prediction.npy")
     print(mask_volume.shape)
 

@@ -18,6 +18,9 @@ except Exception as e:
 mlab.options.offscreen = True
 
 def main(axis, value):
+    '''
+    Create the 3d model of the tumor, create an obj file and mtl file for the material
+    '''
     print("Starting main function")  # Debugging print
     sys.stdout.flush()
 
