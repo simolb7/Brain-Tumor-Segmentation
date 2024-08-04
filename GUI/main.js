@@ -342,7 +342,7 @@ app.whenReady().then(() => {
     
         // Esegui il processo Python 
         const pythonProcess = spawn('python', [scriptPath, t2Path, axis, value]);
-    
+
         pythonProcess.stdout.on('data', (data) => {
             console.log(`stdout: ${data}`);
         });
@@ -356,6 +356,8 @@ app.whenReady().then(() => {
             // Invia un messaggio al renderer per aggiornare l'interfaccia utente
             cuttedWindow.loadFile('cuttedView.html').then(() => {
                 // Dopo che la pagina è stata caricata, invia i dati
+
+                console.log(`Axis: ${axis}, Value: ${value}`);
                 cuttedWindow.webContents.send('update-view', { axis, value });
             });
         });

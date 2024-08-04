@@ -47,7 +47,7 @@
             flex-direction: column;
             align-items: center;
             padding: 10px;
-            width: 160px; /* Larghezza della legenda */
+            width: 220px; /* Larghezza della legenda */
             height: 20px;
             background-color: #f0f0f0;
             border-radius: 10px;
@@ -249,9 +249,18 @@
 
         ipcRenderer.on('update-view', (event, data) => {
             const { axis, value } = data;
-            console.log(`Received Axis: ${axis}, Value: ${value}`);
+            console.log(`Received Plane: ${axis}, Value: ${value}`);
+            let plane; 
+            if (axis === 'x') {
+                plane = 'Sagittal';
+            } else if (axis === 'y') {
+                plane = 'Coronal';
+            } else if (axis === 'z') {
+                plane = 'Axial';
+            }
+            
             // Utilizza i valori come desideri, per esempio, aggiornando il DOM
-            document.getElementById('axis-display').innerHTML = `Axis: <b>${axis}</b>`;
+            document.getElementById('axis-display').innerHTML = `Plane: <b>${plane}</b>`;
             document.getElementById('value-display').innerHTML = `Value: <b>${value}</b>`;
         });
     </script>

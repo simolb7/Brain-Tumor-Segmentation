@@ -71,9 +71,9 @@ def main(t2, axis, value):
         print(f"Cutting on axis {axis} at value {value}")
         src_brain = mlab.pipeline.scalar_field(brain_masked[:value,:,:].astype(np.float64))
     elif axis == 'y':
-        src_brain = mlab.pipeline.scalar_field(brain_masked[:,:value,:].astype(np.float64))
-    elif axis == 'z':
         src_brain = mlab.pipeline.scalar_field(brain_masked[:,:,:value].astype(np.float64))
+    elif axis == 'z':
+        src_brain = mlab.pipeline.scalar_field(brain_masked[:,:value,:].astype(np.float64))
     else:
         print(f"Invalid axis: {axis}")
         sys.stdout.flush()
@@ -88,9 +88,9 @@ def main(t2, axis, value):
         if axis == 'x':
             mask = mask_volume[:value,:,:] == class_value
         elif axis == 'y':
-            mask = mask_volume[:,:value,:] == class_value
-        elif axis == 'z':
             mask = mask_volume[:,:,:value] == class_value
+        elif axis == 'z':
+            mask = mask_volume[:,:value,:] == class_value
         src = mlab.pipeline.scalar_field(mask.astype(np.float64))
         surf = mlab.pipeline.iso_surface(src, color=color, opacity=1, contours=20)
         surfaces.append(surf)
