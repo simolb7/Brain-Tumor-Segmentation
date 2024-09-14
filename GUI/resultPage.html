@@ -489,15 +489,15 @@
         <div class="color-legend">
             <div class="color-item">
                 <span class="color-circle" style="background-color: #ff0000;"></span>
-                <span class="color-label">Core tumor</span>
+                <span class="color-label">Necrotic Core</span>
             </div>
             <div class="color-item">
                 <span class="color-circle" style="background-color: #00ff00;"></span>
-                <span class="color-label">Enhancing tumor</span>
+                <span class="color-label">Edema</span>
             </div>
             <div class="color-item">
                 <span class="color-circle" style="background-color: #0000ff;"></span>
-                <span class="color-label">Necrotic</span>
+                <span class="color-label">Enhancing tumor</span>
             </div>
         </div>
         
@@ -508,9 +508,9 @@
         <div class="view-buttons">
             <button class="view-button-wide" id ="entireTumorBtn">Entire tumor</button>
             <div class="button-group">
-                <button class="view-button" id = "coreBtn">Core tumor</button>
-                <button class="view-button" id = "enhancingBtn">Enhancing tumor</button>
-                <button class="view-button" id = "necroticBtn">Necrotic</button>
+                <button class="view-button" id = "coreBtn">Necrotic Core</button>
+                <button class="view-button" id = "enhancingBtn">Edema</button>
+                <button class="view-button" id = "necroticBtn">Enhancing tumor</button>
             </div>
         </div>
 
@@ -552,7 +552,7 @@
                 <input type="number" id="numInput" pattern="[0-9]" class="operation-input" placeholder="Value" min="1" max="255">
                 <div id="error" class="error-message"></div>
             </div>
-            <button class="operation-button" id="cutBtn" >CUT&nbsp;&nbsp;<i class="fas fa-cut"></i></button>
+            <button class="operation-button" id="cutBtn" >SLICE&nbsp;&nbsp;<i class="fas fa-cut"></i></button>
         </div>
 
         <script>
