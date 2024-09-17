@@ -142,18 +142,29 @@
 
                                 object.traverse(function (child) {
                                     if (child.isMesh) {
-                                        if (child.material.opacity === 0) {
-                                            child.material.transparent = false;
-                                            child.material.opacity = 1;
+                                        // Se il materiale del cervello (mtl1), applica MeshBasicMaterial
+                                        if (child.material.name === 'mtl1') {
+                                            child.material = new THREE.MeshBasicMaterial({
+                                                color: child.material.color, // Mantieni il colore
+                                                map: child.material.map, // Mantieni la texture
+                                                transparent: true, // Se vuoi permettere la trasparenza
+                                                depthWrite: false, // Imposta la scrittura in profondità su false
+                                                opacity: child.material.opacity, // Imposta l'opacità come desideri
+                                            });
+                                            console.log('Applied MeshBasicMaterial to brain:', child.material);
                                         }
-                                        child.material = new THREE.MeshBasicMaterial({
-                                            color: child.material.color,
-                                            map: child.material.map,
-                                            transparent: child.material.transparent,
-                                            side: child.material.side = THREE.DoubleSide,
-                                            opacity: child.material.opacity
-                                        });
-                                        console.log('Applied material:', child.material);
+                                
+                                        // Se il materiale è per il tumore (mtl682121, mtl897899, mtl1551870)
+                                        else  {
+                                            child.material = new THREE.MeshLambertMaterial({
+                                                color: child.material.color, // Mantieni il colore
+                                                transparent: true, // Permetti la trasparenza
+                                                opacity: 1, // Imposta l'opacità
+                                                side: THREE.DoubleSide, // Renderizza solo il lato esterno
+                                                 // Luminosità del materiale
+                                            });
+                                            console.log('Applied MeshLambertMaterial to tumor:', child.material);
+                                        }
                                     }
                                 });
 
@@ -175,6 +186,13 @@
 
                                 // Ridimensionamento dell'oggetto
                                 pivot.scale.setScalar(0.01);
+
+                                const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+                                directionalLight.position.set(2.5, -0.5, 1); // Posizione della luce
+                                scene.add(directionalLight);
+
+                                const ambientLight = new THREE.AmbientLight(0x404040, 2); // Luce ambientale
+                                scene.add(ambientLight);
 
                                 const controls = new OrbitControls(camera, renderer.domElement);
                                 controls.enablePan = true; // Abilita il panning
