@@ -118,7 +118,7 @@ def loadWeight():
 
     # Carica il modello salvato
     model = tf.keras.models.load_model(
-        "C:/Users/simon/Desktop/Universita/Tirocinio/weights/saved_model60_epochs.keras",
+        "C:/Users/simon/Desktop/Universita/TRIENNALE/Tirocinio/weights/saved_model60_epochs.keras",
         custom_objects=custom_objects
     )
     
