@@ -1,0 +1,10 @@
+keras==3.3.3
+matplotlib==3.8.0
+mayavi==4.8.2
+nibabel==5.3.2
+numpy==2.2.3
+scikit_learn==1.2.2
+segmentation_models_3D==1.1.0
+segmentation_models_3D==1.1.1
+tensorflow==2.16.1
+tensorflow_intel==2.16.1
