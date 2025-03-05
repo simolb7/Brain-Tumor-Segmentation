@@ -12,6 +12,8 @@ You can install all the librarires using the `requirements.txt` file and also th
 
 > It's important that you install all the libraries, different version of the libraries are not tested.
 
+![Descrizione dell'immagine](resources/Screenshot 2024-09-18 114840.png)
+
 ## How it work?
 The project accept in input only a dir that contains 3 mri scan (T1-weighted, T2, Flair), like the Brats dataset. After you have waited a certain amount of time, that depends by your machine, you can study and have a 3D overview of the brain within the tumor segmented in 3 different regions. It is also possible to have an overview in a separate way of each regions or cut the model in various way to have a look from the inside. 
 
